@@ -377,6 +377,20 @@ header h1 {
     gap: 4px;
 }
 
+.task-due-date {
+    color: #f59e0b;
+    font-size: 0.85em;
+    margin-top: 8px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    padding: 6px 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
 .task-status {
     display: inline-block;
     margin-top: 10px;

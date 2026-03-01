@@ -34,13 +34,17 @@ def execute_function(function_name: str, arguments: dict):
 
 
 async def agent_query(message: str):
-    messages = [{"role": "user", "content": message}]
-
+    system_instruction = "אתה עוזר לניהול משימות. כשמשתמש מבקש להוסיף משימה עם תאריך, המר את התאריך לפורמט ISO (YYYY-MM-DDTHH:MM:SS). אם לא צוין שעה, השתמש ב-09:00:00."
+    
     try:
         response = requests.post(url, headers=headers, json={
-            "model": "gpt-4o-mini",
-            "messages": messages,
-            "tools": tools_todo
+            "model": "gpt-3.5-turbo",
+            "messages": [
+                {"role": "system", "content": system_instruction},
+                {"role": "user", "content": message}
+            ],
+            "tools": tools_todo,
+            "tool_choice": "auto"
         })
         response.raise_for_status()
     except requests.exceptions.HTTPError as http_err:
@@ -51,46 +55,44 @@ async def agent_query(message: str):
         return {"error": str(e)}
 
     completion = response.json()
+    logger.info(f"Response: {completion}")
     
     if 'choices' not in completion or not completion['choices']:
         logger.error(f"Invalid response: {completion}")
         return {"error": "Invalid response from OpenAI"}
     
-    assistant_message = completion['choices'][0]['message']
+    choice = completion['choices'][0]
+    message_response = choice['message']
     
-    if not assistant_message.get('tool_calls'):
-        return completion
-
-    logger.info(assistant_message)
-    
-    messages.append(assistant_message)
-    
-    for tool_call in assistant_message['tool_calls']:
+    # בדיקה אם יש tool calls
+    if 'tool_calls' in message_response and message_response['tool_calls']:
+        tool_call = message_response['tool_calls'][0]
         function_name = tool_call['function']['name']
-        args = json.loads(tool_call['function']['arguments'])
+        arguments = json.loads(tool_call['function']['arguments'])
         
-        result = execute_function(function_name, args)
+        result = execute_function(function_name, arguments)
+        logger.info(f"Function result: {result}")
         
-        messages.append({
-            "role": "tool",
-            "tool_call_id": tool_call['id'],
-            "content": json.dumps(result, ensure_ascii=False)
-        })
-
-    logger.info(messages)
-
-    try:
-        response2 = requests.post(url, headers=headers, json={
-            "model": "gpt-4o-mini",
-            "messages": messages,
-            "tools": tools_todo
-        })
-        response2.raise_for_status()
-    except requests.exceptions.HTTPError as http_err:
-        logger.error(f"HTTP error occurred: {http_err}")
-        return {"error": str(http_err)}
-    except Exception as e:
-        logger.error(f"Error occurred: {e}")
-        return {"error": str(e)}
-
-    return response2.json()
+        # קריאה שנייה עם התוצאה
+        try:
+            response2 = requests.post(url, headers=headers, json={
+                "model": "gpt-3.5-turbo",
+                "messages": [
+                    {"role": "system", "content": system_instruction},
+                    {"role": "user", "content": message},
+                    message_response,
+                    {"role": "tool", "tool_call_id": tool_call['id'], "content": json.dumps(result)}
+                ],
+                "tools": tools_todo,
+                "tool_choice": "auto"
+            })
+            response2.raise_for_status()
+            completion2 = response2.json()
+            
+            if 'choices' in completion2 and completion2['choices']:
+                return completion2
+        except Exception as e:
+            logger.error(f"Error in second call: {e}")
+            return {"choices": [{"message": {"content": "הפעולה בוצעה בהצלחה"}}]}
+    
+    return completion

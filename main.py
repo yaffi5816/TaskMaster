@@ -3,8 +3,22 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from agent_service import agent_query
 from todo_service import get_tasks
+from email_reminder_service import check_and_send_reminders
+import asyncio
 
 app = FastAPI()
+
+
+async def reminder_background_task():
+    """רץ ברקע ובודק תזכורות כל 5 דקות"""
+    while True:
+        check_and_send_reminders()
+        await asyncio.sleep(300)  # 5 דקות
+
+
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(reminder_background_task())
 
 app.add_middleware(
     CORSMiddleware,
