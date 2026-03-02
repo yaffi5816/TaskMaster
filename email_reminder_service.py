@@ -31,8 +31,6 @@ def send_email_reminder(task):
     תיאור: {task['description']}
     תאריך יעד: {datetime.fromisoformat(task['due_date']).strftime('%d/%m/%Y %H:%M')}
     
-    המשימה צריכה להיות מושלמת בעוד שעתיים!
-    
     בהצלחה,
     מערכת ניהול המשימות
     """
@@ -67,8 +65,8 @@ def check_and_send_reminders():
             due_date = datetime.fromisoformat(task['due_date'])
             time_until_due = due_date - now
             
-            # שליחה שעתיים לפני
-            if timedelta(hours=1, minutes=50) <= time_until_due <= timedelta(hours=2, minutes=10):
+            # שליחה אם נשארו פחות משעתיים ועדיין לא עבר התאריך
+            if timedelta(0) < time_until_due <= timedelta(hours=2):
                 if send_email_reminder(task):
                     mark_reminder_sent(task['id'])
                     logger.info(f"Reminder sent for task {task['id']}")

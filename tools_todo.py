@@ -85,10 +85,8 @@ tools_todo = [
             "description": "קבלת רשימת כל המשימות",
             "parameters": {
                 "type": "object",
-                "properties": {},
-                "additionalProperties": False
-            },
-            "strict": True
+                "properties": {}
+            }
         }
     },
     {
@@ -112,10 +110,8 @@ tools_todo = [
                         "description": "תאריך יעד להשלמת המשימה בפורמט ISO (YYYY-MM-DDTHH:MM:SS)"
                     }
                 },
-                "required": ["title"],
-                "additionalProperties": False
-            },
-            "strict": True
+                "required": ["title"]
+            }
         }
     },
     {
@@ -147,10 +143,8 @@ tools_todo = [
                         "description": "תאריך יעד חדש בפורמט ISO"
                     }
                 },
-                "required": ["task_id"],
-                "additionalProperties": False
-            },
-            "strict": True
+                "required": ["task_id"]
+            }
         }
     },
     {
@@ -166,10 +160,8 @@ tools_todo = [
                         "description": "מזהה המשימה למחיקה"
                     }
                 },
-                "required": ["task_id"],
-                "additionalProperties": False
-            },
-            "strict": True
+                "required": ["task_id"]
+            }
         }
     }
 ]

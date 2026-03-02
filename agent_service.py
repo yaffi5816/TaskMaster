@@ -49,7 +49,8 @@ async def agent_query(message: str):
         response.raise_for_status()
     except requests.exceptions.HTTPError as http_err:
         logger.error(f"HTTP error occurred: {http_err}")
-        return {"error": str(http_err)}
+        logger.error(f"Response content: {response.text}")
+        return {"error": str(http_err), "details": response.text}
     except Exception as e:
         logger.error(f"Error occurred: {e}")
         return {"error": str(e)}
