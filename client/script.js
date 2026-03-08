@@ -39,20 +39,11 @@ function displayTasks(tasks) {
             minute: '2-digit'
         }) : '';
         
-        const dueDate = task.due_date ? new Date(task.due_date).toLocaleString('he-IL', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        }) : '';
-        
         return `
         <div class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
             <span class="task-id">#${task.id}</span>
             <div class="task-title">${task.title}</div>
             ${task.description ? `<div class="task-description">${task.description}</div>` : ''}
-            ${dueDate ? `<div class="task-due-date">⏰ יעד: ${dueDate}</div>` : ''}
             ${date ? `<div class="task-date">📅 נוצר: ${date}</div>` : ''}
             <span class="task-status ${task.completed ? 'completed' : 'pending'}">
                 ${task.completed ? '✓ הושלמה' : '⏳ ממתינה'}

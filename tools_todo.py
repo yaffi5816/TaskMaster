@@ -10,7 +10,7 @@ tools_todo_gemini = [
     },
     {
         "name": "add_task",
-        "description": "הוספת משימה חדשה. אם המשתמש מציין תאריך יעד, יש להמיר אותו לפורמט ISO (YYYY-MM-DDTHH:MM:SS)",
+        "description": "הוספת משימה חדשה",
         "parameters": {
             "type": "object",
             "properties": {
@@ -21,10 +21,6 @@ tools_todo_gemini = [
                 "description": {
                     "type": "string",
                     "description": "תיאור המשימה"
-                },
-                "due_date": {
-                    "type": "string",
-                    "description": "תאריך יעד להשלמת המשימה בפורמט ISO (YYYY-MM-DDTHH:MM:SS)"
                 }
             },
             "required": ["title"]
@@ -51,10 +47,6 @@ tools_todo_gemini = [
                 "completed": {
                     "type": "boolean",
                     "description": "האם המשימה הושלמה"
-                },
-                "due_date": {
-                    "type": "string",
-                    "description": "תאריך יעד חדש בפורמט ISO"
                 }
             },
             "required": ["task_id"]
@@ -93,7 +85,7 @@ tools_todo = [
         "type": "function",
         "function": {
             "name": "add_task",
-            "description": "הוספת משימה חדשה. אם המשתמש מציין תאריך יעד, יש להמיר אותו לפורמט ISO (YYYY-MM-DDTHH:MM:SS)",
+            "description": "הוספת משימה חדשה",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -104,10 +96,6 @@ tools_todo = [
                     "description": {
                         "type": "string",
                         "description": "תיאור המשימה"
-                    },
-                    "due_date": {
-                        "type": "string",
-                        "description": "תאריך יעד להשלמת המשימה בפורמט ISO (YYYY-MM-DDTHH:MM:SS)"
                     }
                 },
                 "required": ["title"]
@@ -137,10 +125,6 @@ tools_todo = [
                     "completed": {
                         "type": "boolean",
                         "description": "האם המשימה הושלמה"
-                    },
-                    "due_date": {
-                        "type": "string",
-                        "description": "תאריך יעד חדש בפורמט ISO"
                     }
                 },
                 "required": ["task_id"]
